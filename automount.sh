@@ -40,15 +40,22 @@ echo "If you did not see the files there that you want to see, press Ctrl+C."
 read -p "Do you want to add this mount to /etc/fstab for auto-mount? (y/n): " ADD_FSTAB
 
 if [[ "$ADD_FSTAB" =~ ^[Yy]$ ]]; then
-    # Create a credentials file
-    CRED_FILE="$HOME/.nas_credentials"
+    # Make hidden creds directory in home
+    CRED_DIR="$HOME/.creds"
+    mkdir -p "$CRED_DIR"
+    chmod 700 "$CRED_DIR"
+
+    # Create unique cred file for this mount
+    CRED_FILE="$CRED_DIR/${NAS_IP}-${NAS_SHARE}.creds"
+
     echo "username=$NAS_USER" > "$CRED_FILE"
     echo "password=$NAS_PASS" >> "$CRED_FILE"
     chmod 600 "$CRED_FILE"
 
     FSTAB_LINE="${NAS} ${MOUNT_POINT} cifs credentials=${CRED_FILE},vers=3.0,uid=$(id -u),gid=$(id -g) 0 0"
     echo "$FSTAB_LINE" | sudo tee -a /etc/fstab
-    echo "Added to /etc/fstab using a secure credentials file. You can test with: sudo mount -a"
+
+    echo "Added to /etc/fstab with hidden credentials file at $CRED_FILE"
     systemctl daemon-reload
 fi
 
