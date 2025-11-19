@@ -49,6 +49,7 @@ if [[ "$ADD_FSTAB" =~ ^[Yy]$ ]]; then
     FSTAB_LINE="${NAS} ${MOUNT_POINT} cifs credentials=${CRED_FILE},vers=3.0,uid=$(id -u),gid=$(id -g) 0 0"
     echo "$FSTAB_LINE" | sudo tee -a /etc/fstab
     echo "Added to /etc/fstab using a secure credentials file. You can test with: sudo mount -a"
+    systemctl daemon-reload
 fi
 
 echo "Done!"
