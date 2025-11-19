@@ -40,6 +40,7 @@ echo "If you did not see the files there that you want to see, press ctrl + c."
 read -p "Do you want to add this mount to /etc/fstab for auto-mount? (y/n): " ADD_FSTAB
 if [[ "$ADD_FSTAB" =~ ^[Yy]$ ]]; then
     FSTAB_LINE="${NAS} ${MOUNT_POINT} cifs username=${NAS_USER},password=${NAS_PASS},vers=3.0,uid=$(id -u),gid=$(id -g) 0 0"
+    FSTAB_PRINT="${NAS} ${MOUNT_POINT} cifs username=${NAS_USER},password=***********,vers=3.0,uid=$(id -u),gid=$(id -g) 0 0"
     echo "$FSTAB_LINE" | sudo tee -a /etc/fstab
     echo "Added to /etc/fstab. You can test with: sudo mount -a"
 fi
